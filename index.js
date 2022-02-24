@@ -11,7 +11,7 @@ server.listen(port, function () {
   console.log("Server listening at port %d", port);
 });
 
-const LockDownEssentials = require("./LockDownEssentials");
+const HomeHardware = require("./HomeHardware");
 const e = require('express');
 const { exception } = require('console');
 
@@ -45,7 +45,7 @@ app.post("/payment/:phone", (req, res) => {
   res.end("ok");
 });
 
-app.get("/payment/:phone", (req, res) => {
+app.get("/help/:phone", (req, res) => {
   // this happens when the user clicks on the link in SMS
   const sFrom = req.params.phone;
   if (!oOrders.hasOwnProperty(sFrom)) {
@@ -60,7 +60,7 @@ app.post("/sms", (req, res) => {
   let sFrom = req.body.From || req.body.from;
   let sUrl = `${req.headers['x-forwarded-proto'] || req.protocol}://${req.headers['x-forwarded-host'] || req.headers.host}${req.baseUrl}`;
   if (!oOrders.hasOwnProperty(sFrom)) {
-    oOrders[sFrom] = new LockDownEssentials(sFrom, sUrl);
+    oOrders[sFrom] = new HomeHardware(sFrom, sUrl);
   }
   if (oOrders[sFrom].isDone()) {
     delete oOrders[sFrom];
